@@ -1,40 +1,103 @@
 /**
  * PUBLIC_INTERFACE
  * Board
- * A presentational component that renders a 3x3 Tic Tac Toe board UI based on the provided Figma extraction.
- * This includes the score header and decorative elements. No gameplay logic is implemented here.
+ * Fully interactive 3x3 Tic Tac Toe board with accessible controls, alternating turns,
+ * win/draw detection, score keeping, and reset. Styled to match the Ocean Professional theme.
  */
 import React, { useCallback, useMemo, useState, useEffect, useRef } from 'react';
 import styles from './Board.module.css';
 
 /**
+ * Helper: all winning line index triplets for a 3x3 board.
+ */
+const WIN_LINES = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [2, 4, 6],
+];
+
+/**
+ * PUBLIC_INTERFACE
+ * getWinner
+ * Determine winner ('X' | 'O') or return null; also returns the winning line indices.
+ */
+function getWinner(cells) {
+  for (const [a, b, c] of WIN_LINES) {
+    if (cells[a] && cells[a] === cells[b] && cells[a] === cells[c]) {
+      return { winner: cells[a], line: [a, b, c] };
+    }
+  }
+  return { winner: null, line: [] };
+}
+
+/**
  * PUBLIC_INTERFACE
  * Cell
- * Accessible interactive tile for the board grid.
+ * Accessible interactive tile for the board grid; renders X/O marks, highlights winning cells,
+ * and supports keyboard activation.
  */
-function Cell({ row, col, onClick }) {
-  const handleKeyDown = useCallback((e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      onClick?.(row, col);
-    }
-  }, [onClick, row, col]);
+function Cell({ index, symbol, onClick, disabled, isWinning }) {
+  const row = Math.floor(index / 3) + 1;
+  const col = (index % 3) + 1;
 
-  const label = useMemo(() => `Cell row ${row} column ${col}`, [row, col]);
+  const handleKeyDown = useCallback(
+    (e) => {
+      if (disabled) return;
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick?.(index);
+      }
+    },
+    [onClick, index, disabled]
+  );
+
+  const label = useMemo(() => {
+    const base = `Cell row ${row} column ${col}`;
+    return symbol ? `${base}, ${symbol}` : base;
+  }, [row, col, symbol]);
+
+  // Style modifiers
+  const markColor =
+    symbol === 'X' ? 'text-48d2fe' : symbol === 'O' ? 'text-e2be00' : '';
+  const winningClass = isWinning ? styles.winning : '';
+  const disabledAttr = disabled ? { 'aria-disabled': true } : {};
 
   return (
     <div
       role="button"
-      tabIndex={0}
+      tabIndex={disabled ? -1 : 0}
       aria-label={label}
-      className={`${styles.tile} bg-43115b radius-10`}
-      onClick={() => onClick?.(row, col)}
+      className={`${styles.tile} bg-43115b radius-10 ${winningClass}`}
+      onClick={() => !disabled && onClick?.(index)}
       onKeyDown={handleKeyDown}
       data-row={row}
       data-col={col}
+      {...disabledAttr}
     >
-      {/* Placeholder for token content per Figma (empty) */}
       <div className={`${styles.tileInner} radius-10`} aria-hidden="true" />
+      {symbol && (
+        <div
+          className={`typo-9 ${markColor}`}
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            left: '0',
+            right: '0',
+            top: '8px',
+            textAlign: 'center',
+            width: '100%',
+            userSelect: 'none',
+            transition: 'transform 160ms ease, opacity 160ms ease',
+          }}
+        >
+          {symbol}
+        </div>
+      )}
     </div>
   );
 }
@@ -57,11 +120,17 @@ function ScoreCard({ label, value, colorClass }) {
 
 /**
  * PUBLIC_INTERFACE
- * Board component wrapper with responsive scaling similar to Figma canvas approach.
+ * Board component wrapper with responsive scaling similar to Figma canvas approach,
+ * plus complete gameplay state management and accessible UI updates.
  */
 export default function Board() {
-  // faux state for scores (no game logic required)
-  const [scores] = useState({ x: 0, draw: 0, o: 0 });
+  // Gameplay state
+  const [cells, setCells] = useState(Array(9).fill(null)); // 0..8
+  const [xIsNext, setXIsNext] = useState(true);
+  const [{ x, o, draw }, setScores] = useState({ x: 0, draw: 0, o: 0 });
+  const [statusMessage, setStatusMessage] = useState('');
+  const [winningLine, setWinningLine] = useState([]);
+  const [gameOver, setGameOver] = useState(false);
 
   // Scale-to-fit logic inspired by assets/app.js but implemented with React refs/effects
   const baseWidth = 2856;
@@ -90,16 +159,60 @@ export default function Board() {
     return () => window.removeEventListener('resize', fitScale);
   }, []);
 
-  const onCellClick = useCallback((row, col) => {
-    // For now, simple log to match original demo behavior
-    // eslint-disable-next-line no-console
-    console.log('Cell clicked:', { row, col });
+  // Compute game status after every move
+  useEffect(() => {
+    const { winner, line } = getWinner(cells);
+    if (winner) {
+      setWinningLine(line);
+      setGameOver(true);
+      setStatusMessage(`Player ${winner} wins!`);
+      setScores((prev) => (winner === 'X' ? { ...prev, x: prev.x + 1 } : { ...prev, o: prev.o + 1 }));
+      return;
+    }
+    const allFilled = cells.every(Boolean);
+    if (allFilled) {
+      setGameOver(true);
+      setStatusMessage('Draw! Nobody wins.');
+      setScores((prev) => ({ ...prev, draw: prev.draw + 1 }));
+      return;
+    }
+    setStatusMessage(`Turn: Player ${xIsNext ? 'X' : 'O'}`);
+    setWinningLine([]);
+    setGameOver(false);
+  }, [cells, xIsNext]);
+
+  // PUBLIC_INTERFACE
+  const handleCellClick = useCallback(
+    (index) => {
+      if (gameOver || cells[index]) return; // ignore if finished or already set
+      setCells((prev) => {
+        const next = [...prev];
+        next[index] = xIsNext ? 'X' : 'O';
+        return next;
+      });
+      setXIsNext((prev) => !prev);
+    },
+    [gameOver, cells, xIsNext]
+  );
+
+  // PUBLIC_INTERFACE
+  const resetBoard = useCallback(() => {
+    setCells(Array(9).fill(null));
+    setXIsNext(true);
+    setWinningLine([]);
+    setGameOver(false);
+    setStatusMessage('Turn: Player X');
   }, []);
 
-  // Build the 3x3 cells using the relative positioning translated to a grid layout.
-  // We preserve sizing and spacing visually consistent with the Figma (150px tiles with gaps).
-  const rows = [1, 2, 3];
-  const cols = [1, 2, 3];
+  // ARIA live region for status
+  const statusAria = useMemo(
+    () => (gameOver ? 'assertive' : 'polite'),
+    [gameOver]
+  );
+
+  // Build rows/cols
+  const rows = [0, 1, 2];
+  const cols = [0, 1, 2];
 
   return (
     <div className={styles.canvasWrapper} ref={wrapperRef} aria-label="Tic Tac Toe Canvas Wrapper">
@@ -110,22 +223,77 @@ export default function Board() {
             className={`${styles.boardSection} bg-2b0040 radius-50`}
             aria-label="Tic Tac Toe Board"
           >
-            {/* Top scores */}
+            {/* Top scores and status */}
             <div className={styles.scoresRow} role="group" aria-label="Scores">
-              <ScoreCard label="Player X" value={scores.x} colorClass="bg-48d2fe" />
-              <ScoreCard label="Draw" value={scores.draw} colorClass="bg-bcdbf9" />
-              <ScoreCard label="Player O" value={scores.o} colorClass="bg-e2be00" />
+              <ScoreCard label="Player X" value={x} colorClass="bg-48d2fe" />
+              <ScoreCard label="Draw" value={draw} colorClass="bg-bcdbf9" />
+              <ScoreCard label="Player O" value={o} colorClass="bg-e2be00" />
+            </div>
+
+            {/* Status message and reset button (placed visually below scores; ARIA live for updates) */}
+            <div
+              className="typo-12 text-000000"
+              style={{
+                position: 'absolute',
+                left: 135,
+                top: 220,
+                width: 574,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: 16,
+              }}
+              aria-live={statusAria}
+              aria-atomic="true"
+            >
+              <span
+                style={{
+                  color: '#ffffff',
+                  textShadow: '0 1px 2px rgba(0,0,0,0.25)',
+                }}
+              >
+                {statusMessage || 'Turn: Player X'}
+              </span>
+              <button
+                type="button"
+                onClick={resetBoard}
+                className="radius-10"
+                style={{
+                  padding: '10px 16px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  background: 'linear-gradient(90deg, rgba(37,99,235,0.15), rgba(249,250,251,0.05))',
+                  color: '#ffffff',
+                  boxShadow: '0 4px 10px rgba(0,0,0,0.25)',
+                  transition: 'transform 120ms ease, opacity 120ms ease',
+                }}
+                aria-label="Reset the current game"
+                onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.98)')}
+                onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+              >
+                Reset
+              </button>
             </div>
 
             {/* Board grid */}
             <div className={`${styles.gridWrap} radius-12 bg-2b0040`} role="grid" aria-label="3 by 3 grid">
               {rows.map((r) => (
                 <div className={styles.gridRow} role="row" key={`row-${r}`}>
-                  {cols.map((c) => (
-                    <div role="gridcell" key={`cell-${r}-${c}`} className={styles.gridCell}>
-                      <Cell row={r} col={c} onClick={onCellClick} />
-                    </div>
-                  ))}
+                  {cols.map((c) => {
+                    const flatIndex = r * 3 + c;
+                    return (
+                      <div role="gridcell" key={`cell-${r}-${c}`} className={styles.gridCell}>
+                        <Cell
+                          index={flatIndex}
+                          symbol={cells[flatIndex]}
+                          onClick={handleCellClick}
+                          disabled={gameOver}
+                          isWinning={winningLine.includes(flatIndex)}
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
               ))}
             </div>

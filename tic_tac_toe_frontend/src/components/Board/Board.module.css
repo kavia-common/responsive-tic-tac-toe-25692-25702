@@ -98,7 +98,7 @@
   width: 150px;
   height: 150px;
   cursor: pointer;
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, outline-color 0.1s ease;
   position: relative;
   outline: none;
 }
@@ -124,6 +124,11 @@
 .tile:focus-visible {
   outline: 3px solid var(--color-48d2fe);
   outline-offset: 2px;
+}
+
+/* Winning cell highlight */
+.winning {
+  box-shadow: 0 0 0 3px rgba(72, 210, 254, 0.8) inset, 0 6px 16px rgba(0,0,0,0.35);
 }
 
 /* Decorative badge and headline positioned similarly to original */
