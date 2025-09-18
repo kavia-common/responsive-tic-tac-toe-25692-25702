@@ -86,13 +86,14 @@ function Cell({ index, symbol, onClick, disabled, isWinning }) {
           aria-hidden="true"
           style={{
             position: 'absolute',
-            left: '0',
-            right: '0',
-            top: '8px',
+            left: 0,
+            right: 0,
+            top: 8,
             textAlign: 'center',
             width: '100%',
             userSelect: 'none',
             transition: 'transform 160ms ease, opacity 160ms ease',
+            zIndex: 2 /* ensure mark sits above overlay */
           }}
         >
           {symbol}
@@ -232,45 +233,18 @@ export default function Board() {
 
             {/* Status message and reset button (placed visually below scores; ARIA live for updates) */}
             <div
-              className="typo-12 text-000000"
-              style={{
-                position: 'absolute',
-                left: 135,
-                top: 220,
-                width: 574,
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                gap: 16,
-              }}
+              className={`${styles.statusBar} typo-12`}
               aria-live={statusAria}
               aria-atomic="true"
             >
-              <span
-                style={{
-                  color: '#ffffff',
-                  textShadow: '0 1px 2px rgba(0,0,0,0.25)',
-                }}
-              >
+              <span className={styles.statusText}>
                 {statusMessage || 'Turn: Player X'}
               </span>
               <button
                 type="button"
                 onClick={resetBoard}
-                className="radius-10"
-                style={{
-                  padding: '10px 16px',
-                  border: 'none',
-                  cursor: 'pointer',
-                  background: 'linear-gradient(90deg, rgba(37,99,235,0.15), rgba(249,250,251,0.05))',
-                  color: '#ffffff',
-                  boxShadow: '0 4px 10px rgba(0,0,0,0.25)',
-                  transition: 'transform 120ms ease, opacity 120ms ease',
-                }}
+                className={styles.resetBtn}
                 aria-label="Reset the current game"
-                onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.98)')}
-                onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
-                onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
               >
                 Reset
               </button>

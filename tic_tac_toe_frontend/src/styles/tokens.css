@@ -121,6 +121,18 @@
 .text-000000 { color: var(--color-000000); }
 .text-2b0040 { color: var(--color-2b0040); }
 .text-dcbf3f { color: var(--color-dcbf3f); }
+/* Add missing text color utilities used by Board.jsx for X/O marks */
+.text-48d2fe { color: var(--color-48d2fe); } /* X */
+.text-e2be00 { color: var(--color-e2be00); } /* O */
+
+/* Provide the typo-9 class expected by the mark renderer for size/weight */
+.typo-9 { 
+  font-family: var(--typo-9-family); 
+  font-size: var(--typo-9-size); 
+  font-weight: var(--typo-9-weight); 
+  line-height: var(--typo-9-line-height); 
+  text-align: center; 
+}
 
 .radius-10 { border-radius: var(--radius-10); }
 .radius-12 { border-radius: var(--radius-12); }
