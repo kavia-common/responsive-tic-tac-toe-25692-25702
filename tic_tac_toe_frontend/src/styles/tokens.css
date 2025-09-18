@@ -1,0 +1,148 @@
+/* Design tokens and utilities migrated from assets/common.css for app-wide use */
+:root {
+  /* Color tokens from design system */
+  --color-002940: #002940;
+  --color-f4f6f5: #f4f6f5;
+  --color-000000: #000000;
+  --color-9747ff: #9747ff;
+  --color-c5a0d7: #c5a0d7;
+  --color-43115b: #43115b;
+  --color-5a1e76: #5a1e76;
+  --color-2b0040: #2b0040;
+  --color-e2be00: #e2be00;
+  --color-48d2fe: #48d2fe;
+  --color-ffffff: #ffffff;
+  --color-bcdbf9: #bcdbf9;
+  --color-099c3b: #099c3b;
+  --color-035b21: #035b21;
+  --color-06802f: #06802f;
+  --color-975fb1: #975fb1;
+  --color-dcbf3f: #dcbf3f;
+
+  /* Typography tokens (sizes in px; font families as specified) */
+  --typo-0-family: "Fredoka One", sans-serif;
+  --typo-0-size: 32px;
+  --typo-0-weight: 400;
+  --typo-0-line-height: 38.72px;
+
+  --typo-1-family: "Fredoka One", sans-serif;
+  --typo-1-size: 94px;
+  --typo-1-weight: 400;
+  --typo-1-line-height: 113.74px;
+
+  --typo-2-family: "Fredoka", sans-serif;
+  --typo-2-size: 20px;
+  --typo-2-weight: 500;
+  --typo-2-line-height: 24.2px;
+
+  --typo-3-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  --typo-3-size: 42px;
+  --typo-3-weight: 700;
+  --typo-3-line-height: 50.8295px;
+
+  --typo-4-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  --typo-4-size: 32px;
+  --typo-4-weight: 700;
+  --typo-4-line-height: 38.7273px;
+
+  --typo-5-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  --typo-5-size: 28px;
+  --typo-5-weight: 400;
+  --typo-5-line-height: 33.8864px;
+
+  --typo-6-family: "Fredoka One", sans-serif;
+  --typo-6-size: 386.8305px;
+  --typo-6-weight: 400;
+  --typo-6-line-height: 219.3333px;
+
+  --typo-7-family: "Fredoka One", sans-serif;
+  --typo-7-size: 331.6427px;
+  --typo-7-weight: 400;
+  --typo-7-line-height: 188.0418px;
+
+  --typo-8-family: "Fredoka One", sans-serif;
+  --typo-8-size: 32px;
+  --typo-8-weight: 400;
+  --typo-8-line-height: 38.72px;
+
+  --typo-9-family: "Fredoka One", sans-serif;
+  --typo-9-size: 94px;
+  --typo-9-weight: 400;
+  --typo-9-line-height: 113.74px;
+
+  --typo-10-family: "Fredoka One", sans-serif;
+  --typo-10-size: 94px;
+  --typo-10-weight: 400;
+  --typo-10-line-height: 113.74px;
+
+  --typo-11-family: "Fredoka", sans-serif;
+  --typo-11-size: 20px;
+  --typo-11-weight: 500;
+  --typo-11-line-height: 24.2px;
+
+  --typo-12-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  --typo-12-size: 42px;
+  --typo-12-weight: 700;
+  --typo-12-line-height: 50.8295px;
+
+  --typo-13-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  --typo-13-size: 28px;
+  --typo-13-weight: 400;
+  --typo-13-line-height: 33.8864px;
+
+  --typo-14-family: "Fredoka One", sans-serif;
+  --typo-14-size: 386.8305px;
+  --typo-14-weight: 400;
+  --typo-14-line-height: 219.3333px;
+
+  --typo-15-family: "Fredoka One", sans-serif;
+  --typo-15-size: 331.6427px;
+  --typo-15-weight: 400;
+  --typo-15-line-height: 188.0418px;
+
+  /* Radius tokens */
+  --radius-5: 5px;
+  --radius-10: 10px;
+  --radius-12: 12px;
+  --radius-15: 15px;
+  --radius-50: 50px;
+  --radius-58-51: 58.5139px;
+  --radius-100: 100px;
+}
+
+/* Utility classes ported from common.css used by Board */
+.bg-2b0040 { background: var(--color-2b0040); }
+.bg-43115b { background: var(--color-43115b); }
+.bg-e2be00 { background: var(--color-e2be00); }
+.bg-48d2fe { background: var(--color-48d2fe); }
+.bg-ffffff { background: var(--color-ffffff); }
+.bg-bcdbf9 { background: var(--color-bcdbf9); }
+.bg-975fb1 { background: var(--color-975fb1); }
+.text-000000 { color: var(--color-000000); }
+.text-2b0040 { color: var(--color-2b0040); }
+.text-dcbf3f { color: var(--color-dcbf3f); }
+
+.radius-10 { border-radius: var(--radius-10); }
+.radius-12 { border-radius: var(--radius-12); }
+.radius-15 { border-radius: var(--radius-15); }
+.radius-50 { border-radius: var(--radius-50); }
+.radius-100 { border-radius: var(--radius-100); }
+
+/* Typographic helpers matching design tokens */
+.typo-11 { font-family: var(--typo-11-family); font-size: var(--typo-11-size); font-weight: var(--typo-11-weight); line-height: var(--typo-11-line-height); color: var(--color-000000); }
+.typo-12 { font-family: var(--typo-12-family); font-size: var(--typo-12-size); font-weight: var(--typo-12-weight); line-height: var(--typo-12-line-height); color: var(--color-000000); }
+
+/* App-wide reset and base */
+* { box-sizing: border-box; }
+html, body, #root {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background: var(--color-5a1e76);
+}
+
+/* Optional global helpers from design */
+.flex-row { display: flex; flex-direction: row; }
+.flex-col { display: flex; flex-direction: column; }
+.center { display: grid; place-items: center; }

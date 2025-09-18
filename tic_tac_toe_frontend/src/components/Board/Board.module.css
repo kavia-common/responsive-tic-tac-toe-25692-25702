@@ -1,0 +1,158 @@
+/* Canvas wrapper and scaling (ported from assets/common.css + app.js behavior) */
+.canvasWrapper {
+  width: 100vw;
+  height: 100vh;
+  background: var(--color-5a1e76);
+  display: grid;
+  place-items: center;
+}
+
+.canvasScaler {
+  position: relative;
+  transform-origin: top left;
+  will-change: transform;
+}
+
+.canvas {
+  position: relative;
+  width: 2856px;
+  height: 1726px;
+  background: var(--color-5a1e76);
+  border-radius: var(--radius-100);
+  overflow: hidden;
+  transform-origin: top left;
+}
+
+/* Section representing the board frame */
+.boardSection {
+  position: absolute;
+  left: 1006px;
+  top: 234px;
+  width: 844px;
+  height: 1257px;
+}
+
+/* Scores Row (based on top score container) */
+.scoresRow {
+  position: absolute;
+  left: 167px;
+  top: 112px;
+  width: 509px;
+  height: 139px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  column-gap: 22px;
+}
+
+.scoreCard {
+  position: relative;
+  width: 155px;
+  height: 139px;
+  display: inline-block;
+}
+
+.scoreLabel {
+  position: absolute;
+  left: 30px;
+  top: 30px;
+}
+
+.scoreValueWrap {
+  position: absolute;
+  left: 26px;
+  top: 63.5px;
+  width: 103px;
+  height: 46px;
+}
+
+/* Board grid wrapper (574x574) */
+.gridWrap {
+  position: absolute;
+  left: 135px;
+  top: 291px;
+  width: 574px;
+  height: 574px;
+  padding: 0;
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+/* Each grid row uses CSS grid with 3 columns to position tiles */
+.gridRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: stretch;
+}
+
+.gridCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tile styling to match 150x150 and hover/focus behaviors */
+.tile {
+  width: 150px;
+  height: 150px;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  position: relative;
+  outline: none;
+}
+
+.tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+/* Inner overlay element (pointer-events: none in original for hover instance) */
+.tileInner {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 150px;
+  height: 150px;
+  pointer-events: none;
+  background: var(--color-43115b);
+  border-radius: var(--radius-10);
+}
+
+/* Keyboard focus ring */
+.tile:focus-visible {
+  outline: 3px solid var(--color-48d2fe);
+  outline-offset: 2px;
+}
+
+/* Decorative badge and headline positioned similarly to original */
+.badge {
+  position: absolute;
+  left: 2487px;
+  top: 1601px;
+  width: 267px;
+  height: 54px;
+  align-items: center;
+  display: flex;
+}
+
+.headline {
+  position: absolute;
+  left: 0px;
+  top: 1040px;
+  width: 750px;
+  height: 658px;
+  color: var(--color-dcbf3f);
+  font-family: var(--typo-14-family);
+  font-size: var(--typo-14-size);
+  font-weight: var(--typo-14-weight);
+  line-height: var(--typo-14-line-height);
+  display: flex;
+  flex-direction: column;
+  white-space: pre-line;
+}
+
+.headlineLine {
+  display: block;
+}
