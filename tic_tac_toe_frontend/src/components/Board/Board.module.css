@@ -163,16 +163,19 @@
   display: block;
 }
 
-/* Status bar: message + reset button */
-.statusBar {
+/* Status message placed directly below the grid */
+.statusBelow {
   position: absolute;
   left: 135px;
-  top: 220px;
+  top: 885px; /* 291(top) + 574(height) + 20 spacing approx */
   width: 574px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
+  color: #e5efff;
+  text-align: center;
+  padding: 12px 16px;
+  border-radius: var(--radius-12);
+  background: linear-gradient(180deg, rgba(37,99,235,0.12), rgba(255,255,255,0.04));
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  backdrop-filter: blur(2px);
 }
 
 .statusText {
@@ -180,19 +183,33 @@
   text-shadow: 0 1px 2px rgba(0,0,0,0.25);
 }
 
-.resetBtn {
-  padding: 10px 16px;
+/* Full-width, prominent reset button below status */
+.resetFullWidth {
+  position: absolute;
+  left: 135px;
+  top: 955px; /* statusBelow top + height + spacing */
+  width: 574px;
+  padding: 14px 18px;
   border: none;
   cursor: pointer;
-  border-radius: var(--radius-10);
-  background: linear-gradient(90deg, rgba(37,99,235,0.15), rgba(249,250,251,0.05));
+  border-radius: 14px;
+  background: linear-gradient(90deg, rgba(37,99,235,0.9), rgba(37,99,235,0.75));
   color: #ffffff;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-  transition: transform 120ms ease, opacity 120ms ease, box-shadow 120ms ease;
+  font-family: var(--typo-12-family);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.06) inset;
+  transition: transform 140ms ease, box-shadow 140ms ease, opacity 140ms ease, filter 140ms ease;
 }
-.resetBtn:hover {
-  box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+.resetFullWidth:hover {
+  box-shadow: 0 12px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.08) inset;
+  filter: saturate(1.05);
 }
-.resetBtn:active {
-  transform: scale(0.98);
+.resetFullWidth:active {
+  transform: translateY(1px) scale(0.995);
+}
+.resetFullWidth:focus-visible {
+  outline: 3px solid #F59E0B; /* Ocean Professional secondary accent for focus */
+  outline-offset: 3px;
 }

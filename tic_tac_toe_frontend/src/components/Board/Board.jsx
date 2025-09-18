@@ -231,25 +231,6 @@ export default function Board() {
               <ScoreCard label="Player O" value={o} colorClass="bg-e2be00" />
             </div>
 
-            {/* Status message and reset button (placed visually below scores; ARIA live for updates) */}
-            <div
-              className={`${styles.statusBar} typo-12`}
-              aria-live={statusAria}
-              aria-atomic="true"
-            >
-              <span className={styles.statusText}>
-                {statusMessage || 'Turn: Player X'}
-              </span>
-              <button
-                type="button"
-                onClick={resetBoard}
-                className={styles.resetBtn}
-                aria-label="Reset the current game"
-              >
-                Reset
-              </button>
-            </div>
-
             {/* Board grid */}
             <div className={`${styles.gridWrap} radius-12 bg-2b0040`} role="grid" aria-label="3 by 3 grid">
               {rows.map((r) => (
@@ -271,6 +252,21 @@ export default function Board() {
                 </div>
               ))}
             </div>
+
+            {/* Status message directly below the board; Reset button below status */}
+            <div className={`${styles.statusBelow} typo-12`} role="status" aria-live={statusAria} aria-atomic="true">
+              <span className={styles.statusText}>
+                {statusMessage || 'Turn: Player X'}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={resetBoard}
+              className={styles.resetFullWidth}
+              aria-label="Reset the current game"
+            >
+              Reset Game
+            </button>
           </section>
 
           {/* Decorative bottom badge */}
